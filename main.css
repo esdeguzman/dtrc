@@ -1,0 +1,25 @@
+body {
+  font-family: "Montserrat";
+}
+
+p,
+h5 {
+  font-weight: bold;
+}
+
+.sub {
+  margin-bottom: -20px;
+  margin-left: -50px;
+}
+
+.text-white {
+  color: white;
+}
+
+.text-orange {
+  color: orange;
+}
+
+p.title {
+  padding-top: 10px;
+}

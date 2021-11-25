@@ -1,0 +1,717 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devikins Team Role Checker</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <div id="devikins-container">
+        <div class="hero is-info is-small">
+            <section class="section">
+                <h1 class="title has-text-centered">Welcome to Devikins Team Role Checker!</h1>
+                <h2 class="subtitle has-text-centered">
+                  This is a community created site and is not related to official devikins content.
+                  <br>
+                  <strong style="color: yellow;">This site is created for desktop and best viewed thru it.</strong>
+                </h2>
+              </section>
+              <section class="section">
+                  <div class="container columns">
+                    <div class="column"></div>
+                    <div class="column is-three-quarters">
+                        <div class="columns">
+                            <div class="column"></div>
+                            <div class="column is-four-fifths">
+                                <input type="text" class="input is-medium" placeholder="Enter Devikin ID Here" v-model="devikin_id" id="devikin_id">
+                                <!-- team role modal trigger -->
+                                <p class="pt-1">
+                                  See all <a href="#" @click="toggleModal" style="border-bottom: solid 1px orange;">team role recommendations</a>
+                                </p>
+                            </div>
+                            <div class="column">
+                                <button class="button is-medium is-dark" v-on:click="search" :disabled="!withInput">Search</button>
+                            </div>
+                            <div class="column"></div>
+                        </div>
+                    </div>
+                    <div class="column"></div>
+                  </div>
+              </section>
+        </div>
+
+        <div class="columns">
+            <div class="column ml-3">
+                <ul>
+                    <li class="p-3">
+                        <h5 class="is-size-4">Affinities</h5>
+                    </li>
+                    <li>
+                        <article class="media">
+                            <figure class="media-left">
+                              <p class="image is-64x64">
+                                <img :src="getAffinityIcon('vitality', list.VitAffinity)" height="50" width="50">
+                              </p>
+                            </figure>
+                            <div class="media-content p-1">
+                              <div>
+                                <p>Vitality</p>
+                                <p>{{ list.VitAffinity }}</p>
+                              </div>
+                            </div>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="media">
+                            <figure class="media-left">
+                              <p class="image is-64x64">
+                                <img :src="getAffinityIcon('power', list.PowAffinity)" height="50" width="50">
+                              </p>
+                            </figure>
+                            <div class="media-content p-1">
+                              <div>
+                                <p>Power</p>
+                                <p>{{ list.PowAffinity }}</p>
+                              </div>
+                            </div>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="media">
+                            <figure class="media-left">
+                              <p class="image is-64x64">
+                                <img :src="getAffinityIcon('fortitude', list.ForAffinity)" height="50" width="50">
+                              </p>
+                            </figure>
+                            <div class="media-content p-1">
+                              <div>
+                                <p>Fortitude</p>
+                                <p>{{ list.ForAffinity }}</p>
+                              </div>
+                            </div>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="media">
+                            <figure class="media-left">
+                              <p class="image is-64x64">
+                                <img :src="getAffinityIcon('agility', list.AgiAffinity)" height="50" width="50">
+                              </p>
+                            </figure>
+                            <div class="media-content p-1">
+                              <div>
+                                <p>Agility</p>
+                                <p>{{ list.AgiAffinity }}</p>
+                              </div>
+                            </div>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="media">
+                            <figure class="media-left">
+                              <p class="image is-64x64">
+                                <img :src="getAffinityIcon('sanity', list.SanAffinity)" height="50" width="50">
+                              </p>
+                            </figure>
+                            <div class="media-content p-1">
+                              <div>
+                                <p>Sanity</p>
+                                <p>{{ list.SanAffinity }}</p>
+                              </div>
+                            </div>
+                        </article>
+                    </li>
+                </ul>
+            </div>
+            <div class="column">
+                <ul>
+                    <li class="p-3">
+                        <h5 class="is-size-4">Base Attributes</h5>
+                    </li>
+                    <li>
+                        <article class="media">
+                            <figure class="media-left">
+                              <p class="image is-64x64">
+                                <img src="icons/base_attributes/vitality.svg" height="50" width="50">
+                              </p>
+                            </figure>
+                            <div class="media-content p-1">
+                              <div>
+                                <p>Vitality</p>
+                                <p>{{ list.VitBase }}</p>
+                              </div>
+                            </div>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="media">
+                            <figure class="media-left">
+                              <p class="image is-64x64">
+                                <img src="icons/base_attributes/power.svg" height="50" width="50">
+                              </p>
+                            </figure>
+                            <div class="media-content p-1">
+                              <div>
+                                <p>Power</p>
+                                <p>{{ list.PowBase }}</p>
+                              </div>
+                            </div>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="media">
+                            <figure class="media-left">
+                              <p class="image is-64x64">
+                                <img src="icons/base_attributes/fortitude.svg" height="50" width="50">
+                              </p>
+                            </figure>
+                            <div class="media-content p-1">
+                              <div>
+                                <p>Fortitude</p>
+                                <p>{{ list.ForBase }}</p>
+                              </div>
+                            </div>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="media">
+                            <figure class="media-left">
+                              <p class="image is-64x64">
+                                <img src="icons/base_attributes/agility.svg" height="50" width="50">
+                              </p>
+                            </figure>
+                            <div class="media-content p-1">
+                              <div>
+                                <p>Agility</p>
+                                <p>{{ list.AgiBase }}</p>
+                              </div>
+                            </div>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="media">
+                            <figure class="media-left">
+                              <p class="image is-64x64">
+                                <img src="icons/base_attributes/sanity.svg" height="50" width="50">
+                              </p>
+                            </figure>
+                            <div class="media-content p-1">
+                              <div>
+                                <p>Sanity</p>
+                                <p>{{ list.SanBase }}</p>
+                              </div>
+                            </div>
+                        </article>
+                    </li>
+                </ul>
+            </div>
+            <div class="column">
+                <ul>
+                    <!-- level select -->
+                    <li class="p-3">
+                        <h5 class="is-size-5">
+                          Base Attributes At Level 
+                          <select class="select" v-model="selected" @change="setBaseAttributeByLevel" :disabled="!showResult">
+                            <option>10</option>
+                            <option>20</option>
+                            <option>30</option>
+                            <option>40</option>
+                            <option>50</option>
+                            <option>60</option>
+                            <option>70</option>
+                            <option>80</option>
+                            <option>90</option>
+                            <option>100</option>
+                          </select>
+                        </h5>
+                    </li>
+                    <li>
+                        <article class="media">
+                            <figure class="media-left">
+                              <p class="image is-64x64">
+                                <img src="icons/base_attributes/vitality.svg" height="50" width="50">
+                              </p>
+                            </figure>
+                            <div class="media-content p-1">
+                              <div>
+                                <p>Vitality</p>
+                                <p>{{ list.VitBase ? getLvl10BaseAttr('vitality').value : '???' }}</p>
+                              </div>
+                            </div>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="media">
+                            <figure class="media-left">
+                              <p class="image is-64x64">
+                                <img src="icons/base_attributes/power.svg" height="50" width="50">
+                              </p>
+                            </figure>
+                            <div class="media-content p-1">
+                              <div>
+                                <p>Power</p>
+                                <p>{{ list.PowBase ? getLvl10BaseAttr('power').value : '???' }}</p>
+                              </div>
+                            </div>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="media">
+                            <figure class="media-left">
+                              <p class="image is-64x64">
+                                <img src="icons/base_attributes/fortitude.svg" height="50" width="50">
+                              </p>
+                            </figure>
+                            <div class="media-content p-1">
+                              <div>
+                                <p>Fortitude</p>
+                                <p>{{ list.ForBase ? getLvl10BaseAttr('fortitude').value : '???' }}</p>
+                              </div>
+                            </div>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="media">
+                            <figure class="media-left">
+                              <p class="image is-64x64">
+                                <img src="icons/base_attributes/agility.svg" height="50" width="50">
+                              </p>
+                            </figure>
+                            <div class="media-content p-1">
+                              <div>
+                                <p>Agility</p>
+                                <p>{{ list.AgiBase ? getLvl10BaseAttr('agility').value : '???' }}</p>
+                              </div>
+                            </div>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="media">
+                            <figure class="media-left">
+                              <p class="image is-64x64">
+                                <img src="icons/base_attributes/sanity.svg" height="50" width="50">
+                              </p>
+                            </figure>
+                            <div class="media-content p-1">
+                              <div>
+                                <p>Sanity</p>
+                                <p>{{ list.SanBase ? getLvl10BaseAttr('sanity').value : '???' }}</p>
+                              </div>
+                            </div>
+                        </article>
+                    </li>
+                </ul>
+            </div>
+            <div class="column is-half" style="background: whitesmoke;">
+                <div v-show="!showResult">
+                    <h4 class="title is-4 white">You will see the top 2 role recommendations here!</h3>
+                    <h5 class="subtitle is-5 white">Enter a Devikin ID to start!</h4>
+                    <h6 class="subtitle is-3">Assumptions</h6>
+                    <ul class="pr-2">
+                        <li style="border-bottom: 1px solid darkgreen;" class="pb-1">
+                          <span class="tag is-warning is-medium">Devikin is matured</span>
+                        </li>
+                        <li style="border-bottom: 1px solid darkgreen;" class="mt-2 pb-1">
+                          Affinity dictates how the Base Attributes grow. i.e. if 
+                          <span class="tag is-info is-medium">Vitality Affinity</span> is 5 then every level-up, Devikin's 
+                          <span class="tag is-dark is-medium">Base Vitality</span> should be raised by 5.
+                        </li>
+                        <li style="border-bottom: 1px solid darkgreen;" class="mt-2 pb-1">
+                          Roles indicated here are not related from the Devikins game but a list of the typical ones that you might encounter in role playing games.
+                        </li>
+                        <li class="mt-2">
+                          <span class="tag is-success is-medium">Personality</span> is not included in the computation.
+                        </li>
+                    </ul>
+                </div>
+                <ul v-show="showResult">
+                    <li class="p-3">
+                        <h3 class="title is-3 white">Top 2 Role Recommendations</h3>
+                    </li>
+                    <li>
+                        <article class="media">
+                            <figure class="media-left">
+                              <p class="">
+                                <img :src="showResult? getBaseAttributeIcon(getTopRecommendedRole().attribute) : ''" height="120" width="120">
+                                <sub>
+                                  <img class="sub" :src="showResult? getBaseAttributeIcon(getTopRecommendedRole().attributeSub) : ''" height="70" width="70" alt="">
+                                </sub>
+                              </p>
+                            </figure>
+                            <div class="media-content">
+                              <div class="content p-2">
+                                <p class="title is-1">{{ showResult? getTopRecommendedRole().name : '' }}</p>
+                                <p class="subtitle">{{ showResult? getTopRecommendedRole().description : '' }}</p>
+                              </div>
+                          </article>
+                    </li>
+                    <li>
+                        <article class="media">
+                            <figure class="media-left">
+                              <p class="">
+                                <img :src="showResult? getBaseAttributeIcon(getTop2RecommendedRole().attribute) : ''" height="120" width="120">
+                                <sub>
+                                  <img class="sub" :src="showResult? getBaseAttributeIcon(getTop2RecommendedRole().attributeSub) : ''" height="70" width="70" alt="">
+                                </sub>
+                              </p>
+                            </figure>
+                            <div class="media-content">
+                              <div class="content p-2">
+                                <p class="title is-1">{{ showResult? getTop2RecommendedRole().name : '' }}</p>
+                                <p class="subtitle">{{ showResult? getTop2RecommendedRole().description : '' }}</p>
+                              </div>
+                          </article>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer text-white" style="background-color: black;">
+          <div class="container">
+            <div class="columns">
+              <div class="column is-4">
+                <h4 class="bd-footer-title">
+                  <strong class="text-white">Devikins Team Role Checker</strong> by Evil Slime of <strong class="text-orange">The Nightcrawlers Guild</strong>
+                </h4>
+                
+                <div class="bd-footer-iframe ">
+                  <a href="https://discord.gg/Y25fxGjj" target="_blank">
+                    <img src="ntcs_guild_logo.png" alt="" height="300" width="300">
+                  </a>
+                </div>
+                
+              </div>
+              <div class="column is-4">
+                <h4 class="bd-footer-title">
+                  <strong class="text-white">All rights belong to their respective owners</strong>
+                </h4>
+                
+                <div class="bd-footer-iframe">
+                  <ul>
+                    <li>
+                      <a href="https://klevernft.com/" target="_blank">
+                        <img src="icons/klever_brand.svg" alt="" height="250" width="250">
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://moonlabs.com/" target="_blank">
+                        <img src="icons/moonlabs_brand.png" alt="" height="250" width="250">
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://devikins.com/" target="_blank">
+                        <img src="icons/devikins_brand.png" alt="" height="250" width="250">
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                
+              </div>
+              <div class="column is-4">
+                <h4 class="bd-footer-title">
+                  <strong class="text-white" style="border-bottom: solid 1px white;">Social Media</strong>
+                </h4>
+                
+                <div class="bd-footer-iframe mt-2">
+                  <ul>
+                    <li>
+                      <a href="https://www.facebook.com/groups/devikinspilipinas" target="_blank">Devikins Pilipinas</a>
+                    </li>
+                    <li>
+                      <a href="https://discord.gg/Y25fxGjj" target="_blank">Join The Nightcrawlers Guild</a>
+                    </li>
+                    <li>
+                      <a href="https://discord.gg/devikins" target="_blank">Devikins Discord Server</a>
+                    </li>
+                    <li>
+                      <a href="https://www.facebook.com/groups/devikinsgame/" target="_blank">Devikins Facebook Page</a>
+                    </li>
+                    <li>
+                      <a href="https://twitter.com/devikins_game" target="_blank">Devikins at Twitter</a>
+                    </li>
+                    <li>
+                      <a href="https://devikins-game.medium.com/" target="_blank">Devikins Medium</a>
+                    </li>
+                    <li>
+                      <a href="https://t.me/devikins_game" target="_blank">Devikins Telegram</a>
+                    </li>
+                    <li>
+                      <a href="https://nightcrawlers-guild.gitbook.io/devikins/" target="_blank">Devikins Unofficial Guide by The Nightcrawlers Guild</a>
+                    </li>
+                  </ul>
+                  <h4 class="bd-footer-title" style="margin-top: 10px;">
+                    <strong class="text-white" style="border-bottom: solid 1px white;">Donate</strong>
+                  </h4>
+                  <a href="https://buymeacoffee.com/evilslime" target="_blank" class="button is-primary" style="margin-top: 10px;">
+                    <span class="icon">
+                      <img src="https://media.giphy.com/media/TDQOtnWgsBx99cNoyH/giphy.gif" alt="" height="50" width="50">
+                    </span>
+                    <span>Buy me a coffee</span>
+                  </a>
+                </div>
+        
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- team roles recommendations modal -->
+        <div :class="modalStatus">
+          <div class="modal-background"></div>
+          <div class="modal-card">
+            <header class="modal-card-head">
+              <p class="modal-card-title">Team Roles List</p>
+              <button class="delete" aria-label="close" @click="toggleModal"></button>
+            </header>
+            <section class="modal-card-body">
+              <ul>
+                <li v-for="role in this.recommendedRoles">
+                  <p class="title">{{ role.name }}</p>
+                  <span class="subtile" v-html="role.description" style="margin-bottom: 10px;"></span>
+                </li>
+              </ul>
+            </section>
+            <footer class="modal-card-foot">
+              <div class="container columns">
+                <div class="column is-1 is-offset-9">
+                  <button class="button is-medium is-dark" @click="toggleModal">Awesome!</button>
+                </div>
+              </div>
+            </footer>
+          </div>
+        </div>
+        <!-- END team roles recommendations modal -->
+    </div>
+    <!-- development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        var devikinsContainer = new Vue({
+            el: '#devikins-container',
+            data: {
+                selected: '10',
+                modalStatus: 'modal',
+                list: [],
+                showResult: false,
+                devikin_id: null,
+                level10BaseAttributes: [],
+                sortedLevel10BaseAttributes: [],
+                recommendedRoles: [
+                  {
+                    'name': 'Tank', 
+                    'top2Attrs': 'vitfor', 
+                    'attribute': 'vitality',
+                    'attributeSub': 'fortitude',
+                    'description': 'A tank or meat shield is a character class commonly seen in co-op video games such as real-time strategy games, role-playing games, etc. Tank characters deliberately attract enemy attention and attacks (potentially by using game mechanic that force them to be targeted) to act as a decoy for teammates.<br><br>Since this requires them to endure concentrated enemy attacks, they typically rely on a high health pool or support by friendly healers to survive while sacrificing their own damage output.'},
+                  {
+                    'name': 'Paladin',
+                    'top2Attrs': 'vitfor|san',
+                    'attribute': 'vitality',
+                    'attributeSub': 'sanity',
+                    'description': 'In game terms, a Paladin is typically a Warrior character first and foremost, proficient with heavy arms and armor, but at the same time is gifted with blessings or magical capabilities such as healing, protection, and countering evil magic (including undead), albeit to a lesser degree than a true priest or cleric. Their outlook is typically that of a militant defender of faith, sometimes crossing over into cleric, missionary, zealot, or inquisitor territory.'},
+                  {
+                    'name': 'ADC', 
+                    'top2Attrs': 'agipow',
+                    'attribute': 'agility',
+                    'attributeSub': 'power',
+                    'description': 'The Attack-Damage Carry (ADC), now commonly known as the Marksman, is the main form of physical based damage hitting champion on your team. Typically, the ADC does a sizeable amount of damage to all on the enemy team, with the exception of potentially the Tank.'},
+                  {
+                    'name': 'Bruiser', 
+                    'top2Attrs': 'pow|vitfor',
+                    'attribute': 'power',
+                    'attributeSub': 'vitality',
+                    'description': 'Bruisers are melee or short-range champs with a balance between being tanky and dealing damage. They are also known as fighters. They have more health than an ADC, and more damage than a tank.'},
+                  {
+                    'name': 'DPS Melee', 
+                    'top2Attrs': 'powagi',
+                    'attribute': 'power',
+                    'attributeSub': 'agility',
+                    'description': 'Damage dealers, as the name implies, is a role who are responsible for dealing damage in the group. It is almost always abbreviated as DPS (Damage per second) or DPSer in a game.'},
+                  {
+                    'name': 'Assassin', 
+                    'top2Attrs': 'agipow',
+                    'attribute': 'agility',
+                    'attributeSub': 'power',
+                    'description': 'Almost identical to DPS Melee, but this role requires a Devikin to have excellent Agility attribute to be able to hit first than any other roles. Its specialty is to deal a lot of damage to a single enemy. Typical skills might include Dash and Stealth for engaging and possibly dodging enemy attacks.'},
+                  {
+                    'name': 'Magic Assassin', 
+                    'top2Attrs': 'agisan',
+                    'attribute': 'agility',
+                    'attributeSub': 'sanity',
+                    'description': 'Similar with Assassin but mostly rely on magic abilities for dealing single target damage.'},
+                  {
+                    'name': 'Mage', 
+                    'top2Attrs': 'san',
+                    'attribute': 'sanity',
+                    'attributeSub': 'ace',
+                    'description': 'Mage is considered to be spellcaster who wield powerful spells, but is often physically weak as a trade-off.'},
+                  {
+                    'name': 'Healer/Support', 
+                    'top2Attrs': 'san',
+                    'attribute': 'sanity',
+                    'attributeSub': 'ace',
+                    'description': 'Classes designed around the restoration of allies\' health, known as healing, in order to delay or prevent their defeat. Such a class can be referred to as a healer. In addition to healing, healer classes are sometimes associated with buffs to assist allies in other ways, and nukes to contribute to the offense when healing is unnecessary.'},
+                  {
+                    'name': 'Hybrid Role', 
+                    'top2Attrs': 'randompair', 
+                    'icon': 'ace',
+                    'iconSub': 'ace',
+                    'description': 'Their 2 highest attributes did not make it to the typically paired ones to make a good role. However their third or fourth attributes might be enough to one. i.e. Vitality and Agility is an odd pair, but when added a Fortitude or Power can make an interesting hybrid role!'}
+                ]
+            },
+            methods: {
+                search: function () {
+                  this.level10BaseAttributes = []
+                  this.sortedLevel10BaseAttributes = []
+                  this.showResult = false
+                  this.list = []
+
+                  fetch('https://inventory.api.devikins.com/asset/' + this.devikin_id)
+                      .then(response => response.json())
+                      .then(data => {
+                          this.list = data
+                          this.showResult = true
+                          this.selected = 10
+                          this.level10BaseAttributes.push(
+                            {'name': 'vitality', 'code': 'vit', 'value': this.list.VitBase + (this.list.VitAffinity*9)},
+                            {'name': 'power', 'code': 'pow',  'value': this.list.PowBase + (this.list.PowAffinity*9)},
+                            {'name': 'fortitude', 'code': 'for',  'value': this.list.ForBase + (this.list.ForAffinity*9)},
+                            {'name': 'agility', 'code': 'agi',  'value': this.list.AgiBase + (this.list.AgiAffinity*9)},
+                            {'name': 'sanity', 'code': 'san',  'value': this.list.SanBase + (this.list.SanAffinity*9)}
+                          )
+
+                          this.sortedLevel10BaseAttributes = this.level10BaseAttributes.sort(function(a,b) {
+                            return b.value - a.value
+                          })
+                      })
+                      .catch(error => {
+                        alert('No Devikin found using that ID, please try searching another one.')
+                        document.getElementById('devikin_id').value = ''
+                        this.devikin_id = null
+                      })
+                },
+                getLvl10BaseAttr: function (name) {
+                  lvl10BaseAttr = this.level10BaseAttributes
+
+                  return lvl10BaseAttr.find(lvl10BaseAttr => lvl10BaseAttr.name === name)
+                },
+                setBaseAttributeByLevel: function () {
+                  selected = this.selected - 1
+                  
+                  vitality = this.list.VitBase + (this.list.VitAffinity * selected)
+                  power = this.list.PowBase + (this.list.PowAffinity * selected)
+                  fortitude = this.list.ForBase + (this.list.ForAffinity * selected)
+                  agility = this.list.AgiBase + (this.list.AgiAffinity * selected)
+                  sanity = this.list.SanBase + (this.list.SanAffinity * selected)
+
+                  this.level10BaseAttributes.forEach(baseAttribute => {
+                    if (baseAttribute.name == 'vitality') {
+                      baseAttribute.value = vitality
+                    } else if (baseAttribute.name == 'power') {
+                      baseAttribute.value = power
+                    } else if (baseAttribute.name == 'fortitude') {
+                      baseAttribute.value = fortitude
+                    } else if (baseAttribute.name == 'agility') {
+                      baseAttribute.value = agility
+                    } else if (baseAttribute.name == 'sanity') {
+                      baseAttribute.value = sanity
+                    }
+                  });
+                },
+                getTop2Lvl10BaseAttrs: function () {
+                  top2Attrs = ''
+                  top2Attrs += lvl10BaseAttrs = this.sortedLevel10BaseAttributes[0].code
+                  top2Attrs += lvl10BaseAttrs = this.sortedLevel10BaseAttributes[1].code
+                  
+                  if (top2Attrs === 'vitsan' || top2Attrs === 'forsan' || top2Attrs === 'sanvit' || top2Attrs === 'sanfor') {
+                    top2Attrs = 'vitfor|san'
+                  } else if(top2Attrs === 'powvit' || top2Attrs === 'powfor' || top2Attrs === 'vitpow' || top2Attrs === 'forpow') {
+                    top2Attrs = 'pow|vitfor'
+                  } else if (top2Attrs === 'forvit' || top2Attrs === 'vitfor') {
+                    top2Attrs = 'vitfor'
+                  } else if (top2Attrs === 'powagi' || top2Attrs === 'agipow') {
+                    top2Attrs = 'agipow'
+                  } else if (top2Attrs === 'sanagi' || top2Attrs === 'agisan') {
+                    top2Attrs = 'agisan'
+                  } else if (top2Attrs === 'sanvit' || top2Attrs === 'vitsan') {
+                    top2Attrs = 'vitsan'
+                  } else if (top2Attrs.startsWith('san')) {
+                    top2Attrs = 'san'
+                  } else {
+                    top2Attrs = 'randompair'
+                  }
+
+                  return top2Attrs
+                },
+                getTopRecommendedRole: function () {
+                  top2Attrs = this.getTop2Lvl10BaseAttrs()
+                  roles = this.recommendedRoles
+
+                  return roles.find(roles => roles.top2Attrs === top2Attrs)
+                },
+                getNextTop2Lvl10BaseAttrs: function () {
+                  nextTop2Attrs = ''
+                  nextTop2Attrs += lvl10BaseAttrs = this.sortedLevel10BaseAttributes[1].code
+                  nextTop2Attrs += lvl10BaseAttrs = this.sortedLevel10BaseAttributes[2].code
+
+                  if (nextTop2Attrs === 'vitsan' || nextTop2Attrs === 'forsan' || nextTop2Attrs === 'sanvit' || nextTop2Attrs === 'sanfor') {
+                    nextTop2Attrs = 'vitfor|san'
+                  } else if(nextTop2Attrs === 'powvit' || nextTop2Attrs === 'powfor' || nextTop2Attrs === 'vitpow' || nextTop2Attrs === 'forpow') {
+                    nextTop2Attrs = 'pow|vitfor'
+                  } else if (nextTop2Attrs === 'forvit' || nextTop2Attrs === 'vitfor') {
+                    nextTop2Attrs = 'vitfor'
+                  } else if (nextTop2Attrs === 'powagi' || nextTop2Attrs === 'agipow') {
+                    nextTop2Attrs = 'agipow'
+                  } else if (nextTop2Attrs === 'sanagi' || nextTop2Attrs === 'agisan') {
+                    nextTop2Attrs = 'agisan'
+                  } else if (nextTop2Attrs === 'sanvit' || nextTop2Attrs === 'vitsan') {
+                    nextTop2Attrs = 'vitsan'
+                  } else if (nextTop2Attrs.startsWith('san')) {
+                    nextTop2Attrs = 'san'
+                  } else {
+                    nextTop2Attrs = 'randompair'
+                  }
+
+                  return nextTop2Attrs
+                },
+                getTop2RecommendedRole: function () {
+                  nextTop2Attrs = this.getNextTop2Lvl10BaseAttrs()
+                  roles = this.recommendedRoles
+
+                  return roles.find(roles => roles.top2Attrs === nextTop2Attrs)
+                },
+                getAffinityIcon: function (affinity, value) {
+                  link = 'icons/affinities/'
+                  colorScaleSvg = '/'
+                  
+                  if (value >= 1 && value <= 4) {
+                    colorScaleSvg += 'brown.svg'
+                  } else if (value >= 5 && value <= 7) {
+                    colorScaleSvg += 'yellow.svg'
+                  } else if (value >= 8 && value <= 9) {
+                    colorScaleSvg += 'red.svg'
+                  } else if (value == 10) {
+                    colorScaleSvg += 'purple.svg'
+                  } else {
+                    colorScaleSvg += 'brown.svg'
+                  }
+
+                  return link =  link + affinity + colorScaleSvg
+                },
+                getBaseAttributeIcon: function (attribute) {
+                  console.log('icons/base_attributes/' + attribute + '.svg')
+                  return 'icons/base_attributes/' + attribute + '.svg'
+                },
+                toggleModal: function () {
+                  this.modalStatus === 'modal' ? this.modalStatus = 'modal is-active' : this.modalStatus = 'modal'
+                }
+            },
+            computed: {
+                withInput: function() {
+                    return this.devikin_id ? true : false;
+                }
+            }
+        })
+    </script>
+</body>
+</html>
